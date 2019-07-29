@@ -221,11 +221,16 @@ data:
             imagePullPolicy: Always
             args:
             - "make"
-            - "deploy"
-            - "PROJECT_ID={{ .PROJECT_ID }}"
-            - "ZONE={{ .ZONE }}"
-            - "CLUSTER_NAME={{ .CLUSTER_NAME }}"
-            - "DOMAIN_NAME={{ .DOMAIN_NAME }}"
+            - "start_ss"
+            env:
+            - name: PROJECT_ID
+              value: {{ .PROJECT_ID }}
+            - name: ZONE
+              value: {{ .ZONE }}
+            - name: CLUSTER_NAME
+              value: {{ .CLUSTER_NAME }}
+            - name: DOMAIN_NAME
+              value: {{ .DOMAIN_NAME }}
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
@@ -247,10 +252,16 @@ data:
             imagePullPolicy: Always
             args:
             - "make"
-            - "clean"
-            - "PROJECT_ID={{ .PROJECT_ID }}"
-            - "ZONE={{ .ZONE }}"
-            - "CLUSTER_NAME={{ .CLUSTER_NAME }}"
+            - "stop_ss"
+            env:
+            - name: PROJECT_ID
+              value: {{ .PROJECT_ID }}
+            - name: ZONE
+              value: {{ .ZONE }}
+            - name: CLUSTER_NAME
+              value: {{ .CLUSTER_NAME }}
+            - name: DOMAIN_NAME
+              value: {{ .DOMAIN_NAME }}
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
