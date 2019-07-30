@@ -231,6 +231,8 @@ data:
               value: {{ .CLUSTER_NAME }}
             - name: DOMAIN_NAME
               value: {{ .DOMAIN_NAME }}
+            - name: GITHUB_ORG
+              value: {{ .GITHUB_ORG }}
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
@@ -262,6 +264,8 @@ data:
               value: {{ .CLUSTER_NAME }}
             - name: DOMAIN_NAME
               value: {{ .DOMAIN_NAME }}
+            - name: GITHUB_ORG
+              value: {{ .GITHUB_ORG }}
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
