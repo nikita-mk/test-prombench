@@ -49,6 +49,7 @@ export DOMAIN_NAME=prombench.prometheus.io // Can be set to any other custom dom
 ./prombench gke resource apply -a $AUTH_FILE -v PROJECT_ID:$PROJECT_ID -v ZONE:$ZONE \
     -v CLUSTER_NAME:$CLUSTER_NAME -v DOMAIN_NAME:$DOMAIN_NAME \
     -v GRAFANA_ADMIN_PASSWORD:$GRAFANA_ADMIN_PASSWORD \
+    -v GKE_AUTH="$(cat $AUTH_FILE | base64 -w 0)" \
     -v GCLOUD_SERVICEACCOUNT_CLIENT_EMAIL:$GCLOUD_SERVICEACCOUNT_CLIENT_EMAIL \
     -f manifests/cluster-infra
 ```
@@ -74,7 +75,6 @@ export DOMAIN_NAME=prombench.prometheus.io // Can be set to any other custom dom
     -v CLUSTER_NAME:$CLUSTER_NAME -v PROJECT_ID:$PROJECT_ID \
     -v HMAC_TOKEN="$(printf $HMAC_TOKEN | base64 -w 0)" \
     -v OAUTH_TOKEN="$(printf $OAUTH_TOKEN | base64 -w 0)" \
-    -v GKE_AUTH="$(cat $AUTH_FILE | base64 -w 0)" \
     -f manifests/prow/secrets.yaml
 ```
 
@@ -100,21 +100,15 @@ export GITHUB_REPO=prometheus
 ```
 export RELEASE=<master or any prometheus release(ex: v2.3.0) >
 export PR_NUMBER=<PR to benchmark against the selected $RELEASE>
+export PULL_PULL_SHA=<anything would work, but ideally should be the GITHUB_SHA>
 ```
 
-- Create the nodepools for the k8s objects
+- Start the prombench test as a StatefulSet
 ```
-./prombench gke nodepool create -a $AUTH_FILE \
-    -v ZONE:$ZONE -v PROJECT_ID:$PROJECT_ID -v CLUSTER_NAME:$CLUSTER_NAME \
-    -v PR_NUMBER:$PR_NUMBER -f manifests/prombench/nodepools.yaml
-```
-
-- Deploy the k8s objects
-```
-./prombench gke resource apply -a $AUTH_FILE \
-    -v ZONE:$ZONE -v PROJECT_ID:$PROJECT_ID -v CLUSTER_NAME:$CLUSTER_NAME \
-    -v PR_NUMBER:$PR_NUMBER -v RELEASE:$RELEASE -v DOMAIN_NAME:$DOMAIN_NAME \
-    -f manifests/prombench/benchmark
+./prombench gke resource apply -a $AUTH_FILE -v PROJECT_ID:$PROJECT_ID \
+	-v ZONE:$ZONE -v CLUSTER_NAME:$CLUSTER_NAME -v DOMAIN_NAME:$DOMAIN_NAME \
+	-v PR_NUMBER:$PR_NUMBER -v RELEASE:$RELEASE -v LAST_COMMIT:$PULL_PULL_SHA \
+	-f manifests/prombench/prombenchTest_ss.yaml
 ```
 
 ### Setting up GitHub API and webhook to trigger tests from comments.
