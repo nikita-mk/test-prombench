@@ -231,6 +231,8 @@ data:
               value: {{ .CLUSTER_NAME }}
             - name: DOMAIN_NAME
               value: {{ .DOMAIN_NAME }}
+            - name: PROMBENCH_REPO
+              value: "https://github.com/prometheus/prombench.git"
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
@@ -262,6 +264,8 @@ data:
               value: {{ .CLUSTER_NAME }}
             - name: DOMAIN_NAME
               value: {{ .DOMAIN_NAME }}
+            - name: PROMBENCH_REPO
+              value: "https://github.com/prometheus/prombench.git"
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
