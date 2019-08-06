@@ -232,7 +232,7 @@ data:
             - name: DOMAIN_NAME
               value: {{ .DOMAIN_NAME }}
             - name: PROMBENCH_REPO
-              value: "https://github.com/prometheus/prombench.git"
+              value: {{ .PROMBENCH_REPO }}
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
@@ -265,7 +265,7 @@ data:
             - name: DOMAIN_NAME
               value: {{ .DOMAIN_NAME }}
             - name: PROMBENCH_REPO
-              value: "https://github.com/prometheus/prombench.git"
+              value: {{ .PROMBENCH_REPO }}
             volumeMounts:
             - name: serviceaccount
               mountPath: /etc/serviceaccount/
