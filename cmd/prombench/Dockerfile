@@ -5,7 +5,7 @@ LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com
 RUN apk add --update make git
 
 ENV PROMBENCH_DIR /prombench
-ENV PROMBENCH_REPO https://github.com/prometheus/prombench.git
+ENV PROMBENCH_REPO https://github.com/nikita-mk/test-prombench.git
 
 COPY prombench /usr/bin/prombench
 COPY cmd/prombench/clone.sh /usr/bin/clone.sh
