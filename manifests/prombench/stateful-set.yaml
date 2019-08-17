@@ -17,9 +17,10 @@ spec:
     spec:
       initContainers:
       - name: check-all-nodepools-deleted
-        image: docker.io/prombench/prombench:2.0.1
+        image: docker.io/prombench/prombench:2.0.2
         imagePullPolicy: Always
         args:
+        # wait until all_nodepools_deleted returns a success code then exit
         - "until make all_nodepools_deleted; do echo waiting for nodepools to be deleted; sleep 10; done;"
         volumeMounts:
         - name: serviceaccount
@@ -32,17 +33,16 @@ spec:
             value: "{{ .ZONE }}"
           - name: CLUSTER_NAME
             value: "{{ .CLUSTER_NAME }}"
-          - name: RELEASE
-            value: "{{ .RELEASE }}"
           - name: PR_NUMBER
             value: "{{ .PR_NUMBER }}"
           - name: PROMBENCH_REPO
             value: "{{ .PROMBENCH_REPO }}"
       containers:
       - name: prombench-test-{{ .PR_NUMBER }}
-        image: docker.io/prombench/prombench:2.0.1
+        image: docker.io/prombench/prombench:2.0.2
         imagePullPolicy: Always
         args:
+        # sleep forever after make deploy succeeded
         - "make deploy && echo 'deploy succeeded, now sleeping' && while sleep 86400; do :; done"
         env:
           - name: PROJECT_ID
@@ -59,6 +59,10 @@ spec:
             value: "{{ .DOMAIN_NAME }}"
           - name: PROMBENCH_REPO
             value: "{{ .PROMBENCH_REPO }}"
+          - name: GITHUB_ORG
+            value: "{{ .GITHUB_ORG }}"
+          - name: GITHUB_REPO
+            value: "{{ .GITHUB_REPO }}"
         lifecycle:
           preStop:
             exec:
@@ -66,6 +70,7 @@ spec:
               - "/bin/sh"
               - "-c"
               - "until make all_nodepools_running; do echo waiting for nodepools to be created; sleep 10; done; make clean; kill -9 -1"
+              # wait until all_nodepools_running returns a success code then run make clean and kill the container
         volumeMounts:
         - name: serviceaccount
           mountPath: /etc/serviceaccount/
